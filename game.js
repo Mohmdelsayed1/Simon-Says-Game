@@ -80,7 +80,6 @@ const StartGame = () => {
   x = Math.floor(Math.random() * 4);
   Sequence.push(colors[x][1]);
   setTimeout(colors[x][0], 800);
-  console.log(Sequence);
 };
 
 //Start new game upon any key press
