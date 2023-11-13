@@ -13,8 +13,8 @@ const YellowAudio = new Audio("sounds/yellow.mp3");
 const BlueAudio = new Audio("sounds/blue.mp3");
 
 //Create a <p> to display current level
-const CurrentLevel=document.createElement("p");
-CurrentLevel.id="level";
+const CurrentLevel = document.createElement("p");
+CurrentLevel.id = "level";
 document.getElementById("level-title").appendChild(CurrentLevel);
 
 //Define the blink event for each color
@@ -66,45 +66,48 @@ const colors = [
 
 //Initialize the main variables
 let Level = 0;
-let Sequence = [];//to track the pattern history
+let Sequence = []; //to track the pattern history
 let clickedId = "";
-let clickarr = [];//to track clicks history
+let clickarr = []; //to track clicks history
 
 //Generate rondom Pattern every new game
 const StartGame = () => {
+  document.removeEventListener("keydown", StartGame);
   document.getElementsByTagName("body")[0].classList.remove("game-over");
-  Level+=1
-  CurrentLevel.innerText=`Level ${Level}`;
+  Level += 1;
+  CurrentLevel.innerText = `Level ${Level}`;
   let x = 0;
   x = Math.floor(Math.random() * 4);
   Sequence.push(colors[x][1]);
-  setTimeout(colors[x][0],800);
+  setTimeout(colors[x][0], 800);
   console.log(Sequence);
 };
 
 //Start new game upon any key press
-document.addEventListener("keydown", StartGame);
+  document.addEventListener("keydown", StartGame);
 
-//Make sure that clicks sequence pattern follow the generated blink sequence pattern 
+
+//Make sure that clicks sequence pattern follow the generated blink sequence pattern
 let BoxClick = document.querySelectorAll(".btn");
-BoxClick.forEach(function (button) {//For each clicked button define the check algorithm
+BoxClick.forEach(function (button) {
+  //For each clicked button define the check algorithm
   button.addEventListener("click", function () {
     clickedId = this.id;
-    clickarr.push(clickedId);//Push click' Ids to click sequence
+    clickarr.push(clickedId); //Push click' Ids to click sequence
     for (let i = 0; i < clickarr.length; i++) {//Loop through the Clicks array to recognize correct pattern
-      if(Sequence.length==0){//If players clicked before game start, remind them to press a key first 
-        CurrentLevel.innerText="Press Any Key To Start First";
-      }
-      else if (Sequence[i] != clickarr[i]) {//Validate the clicks' sequence congruency with the generated blinks' sequence
-        CurrentLevel.innerText="game over, Press Any Key To Start Again";
-        Level=0;
+      if (Sequence.length == 0) {//If players clicked before game start, remind them to press a key first
+        CurrentLevel.innerText = "Press Any Key To Start First";
+      } else if (Sequence[i] != clickarr[i]) {//Validate the clicks' sequence congruency with the generated blinks' sequence
+        document.addEventListener("keydown", StartGame);
+        CurrentLevel.innerText = "game over, Press Any Key To Start Again";
+        Level = 0;
         Sequence = [];
         clickarr = [];
         document.getElementsByTagName("body")[0].classList.add("game-over");
         return;
-      } 
-      if(i==Sequence.length-1 ) {//Mark the completion of the level
-        clickarr=[];
+      }
+      if (i == Sequence.length - 1) {//Mark the completion of the level
+        clickarr = [];
         StartGame();
       }
     }
